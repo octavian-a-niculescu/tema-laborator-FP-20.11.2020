@@ -1,0 +1,104 @@
+#include <iostream>
+
+using namespace std;
+
+void citire(int& n, int**& a)
+{
+	cin >> n;
+	a = new int*[100];
+	for (int i = 0; i < n; i++)
+	{
+		*(a + i) = new int[100];
+	}
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			cin >> *(*(a+i)+j);
+		}
+	}
+}
+
+void afisare(int& n, int** a)
+{
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			cout << *(*(a + i) + j) <<" ";
+		}
+		cout << endl;
+	}
+}
+
+int nord(int n, int** a)
+{
+	int suma = 0;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (i + j > 2 * i && i + j < n - 1)
+			{
+				suma += *(*(a + i) + j);
+			}
+		}
+	}
+	return suma;
+}
+
+int sud(int n, int** a)
+{
+	int suma = 0;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (i + j < 2 * i && i + j > n - 1)
+			{
+				suma += *(*(a + i) + j);
+			}
+		}
+	}
+	return suma;
+}
+
+int vest(int n, int** a)
+{
+	int suma = 0;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (i + j > 2 * i && i + j > n - 1)
+			{
+				suma += *(*(a + i) + j);
+			}
+		}
+	}
+	return suma;
+}
+
+int est(int n, int** a)
+{
+	int suma = 0;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (i + j < 2 * i && i + j < n - 1)
+			{
+				suma += *(*(a + i) + j);
+			}
+		}
+	}
+	return suma;
+}
+
+int main()
+{
+	int n, ** a;
+	citire(n, a);
+	cout << nord(n, a) << " " << vest(n,a) << " " << sud(n, a) << " " << est(n, a);
+	return 0;
+}
