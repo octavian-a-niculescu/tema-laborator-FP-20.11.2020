@@ -1,0 +1,102 @@
+#include <iostream>
+
+using namespace std;
+
+void swap(int* a, int* b)
+{
+	int t = *a;
+	*a = *b;
+	*b = t;
+}
+
+int partition(int arr[], int low, int high)
+{
+	int pivot = arr[high];
+	int i = (low - 1);
+
+	for (int j = low; j <= high - 1; j++)
+	{
+		if (arr[j] < pivot)
+		{
+			i++;
+			swap(&arr[i], &arr[j]);
+		}
+	}
+	swap(&arr[i + 1], &arr[high]);
+	return (i + 1);
+}
+
+void quickSort(int arr[], int low, int high)
+{
+	if (low < high)
+	{
+		int pi = partition(arr, low, high);
+
+		quickSort(arr, low, pi - 1);
+		quickSort(arr, pi + 1, high);
+	}
+}
+
+void citire(int& n, int**& a)
+{
+	cin >> n;
+	a = new int* [100];
+	for (int i = 0; i < n; i++)
+	{
+		*(a + i) = new int[100];
+	}
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			cin >> *(*(a + i) + j);
+		}
+	}
+}
+
+void afisare(int n, int* a)
+{
+	for (int i = 0; i < n; i++)
+	{
+		cout << *(a + i) << " ";
+	}
+}
+
+void aflareNrDistincteInMatrice(int n, int** a, int*& raspunsNrDistincte)
+{
+	raspunsNrDistincte = new int[100];
+	for (int i = 0; i < n; i++)
+	{
+		*(raspunsNrDistincte + i) = 0;
+	}
+	for (int i = 0; i < n; i++)
+	{
+		quickSort(*(a + i), 0, n);
+	}
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n-1; j++)
+		{
+			for (int p = j + 1; p < n; p++)
+			{
+				if (*(*(a + i)+j) == *(*(a + i) + p))
+				{
+					continue;
+				}
+				else
+				{
+					*(raspunsNrDistincte + i) += 1;
+				}
+			}
+		}	
+	}
+}
+
+int main()
+{
+	int n, ** a, * nrDistinctePerLinie;
+	citire(n, a);
+	aflareNrDistincteInMatrice(n, a, nrDistinctePerLinie);
+	afisare(n, nrDistinctePerLinie);
+	return 0;
+}
