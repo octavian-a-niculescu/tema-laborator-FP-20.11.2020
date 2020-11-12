@@ -1,0 +1,130 @@
+#include <iostream> ////nu merge, as vrea s-o discutam
+#include <algorithm>
+
+using namespace std;
+
+int partitionare(int low, int high, int*& array)
+{
+    int pivot = array[high];
+    int contorSchimbare = low;
+    for (int i = low; i < high; i++)
+    {
+        if (*(array + i) < pivot)
+        {
+            swap(*(array + i), *(array + contorSchimbare));
+            i++;
+        }
+    }
+    swap(*(array + contorSchimbare), *(array + high));
+    return contorSchimbare;
+}
+
+void qs(int low, int high, int*& array)
+{
+    if (low < high)
+    {
+        int pivot = partitionare(low, high, array);
+        qs(low, pivot - 1, array);
+        qs(pivot+1, high, array);
+    }
+}
+
+void citire(int n, int**& a)
+{
+    a = new int*[n];
+    for (int i = 0; i < n; i++)
+    {
+        a[i] = new int[n];
+    }
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            cin >> *(*(a + i) + j);
+        }
+    }
+}
+
+void afisare(int n, int** a)
+{
+    a = new int* [n];
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            cout << *(*(a + i) + j) << " ";
+        }
+    }
+    cout << endl;
+}
+
+void stocareElementeDiagonalaPrincipala(int n, int**a, int*& b)
+{
+    b = new int[n];
+    for (int i = 0; i < n; i++)
+    {
+        *(b + i) = *(*(a + i)+i);
+    }
+}
+
+void ordineaCrescatoareAElementelor(int n, int*& b)
+{
+    qs(0, n, b); //am citit dupa ca n e maxim 100, deci nu merita sa fac quicksort, dar nu-l mai sterg acum, m-am chinuit sa-l scriu :))
+}
+
+void interschimbareLinie(int**& a, int n, int indice1, int indice2)
+{
+    for (int i = 0; i < n; i++)
+    {
+        swap(*(*(a + indice1) + i), *(*(a + indice2) + i));
+    }
+}
+
+void interschimbareColoana(int**& a, int n, int indice1, int indice2)
+{
+    for (int i = 0; i < n; i++)
+    {
+        swap(*(*(a + i) + indice1), *(*(a + i) + indice2));
+    }
+}
+
+void interschimbare(int**& a, int* b, int*& linie, int*& coloana, int n)
+{
+    linie = new int[n];
+    coloana = new int[n];
+    for (int i = 0; i < n; i++)
+    {
+        if (*(*(a + i)+i) != *(b + i))
+        {
+            for (int j = 0; j < n; j++)
+            {
+                *(linie + j) = *(*(a + i) + j); //salvam linia si coloana elementului pe care le vom pierde in urma suprascrierii
+                *(coloana + j) = *(*(a + j) + i);
+            }
+        }
+        for (int j = 0; j < n; j++)
+        {
+            if (*(*(a + i) + i) == *(b + j))
+            {
+                interschimbareLinie(a, n, i, j);
+                interschimbareColoana(a, n, i, j);
+                stocareElementeDiagonalaPrincipala(n, a, b);
+                ordineaCrescatoareAElementelor(n, b);
+                break;
+            }
+        }
+    }
+}
+
+int main()
+{
+    int** a;
+    int n = 5;
+    int* b; int* temp1; int* temp2;
+    citire(n, a);
+    stocareElementeDiagonalaPrincipala(n, a, b);
+    ordineaCrescatoareAElementelor(n, b);
+    interschimbare(a, b, temp1, temp2, n);
+    afisare(n, a);
+    return 0;
+}
